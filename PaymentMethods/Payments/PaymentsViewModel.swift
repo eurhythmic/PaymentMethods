@@ -20,8 +20,14 @@ class PaymentsViewModel {
             .decode(type: ListResult.self, decoder: JSONDecoder())
             .map(\.networks)
             .map(\.applicable)
-            .replaceError(with: [])
-            .sink { [unowned self] results in
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    print("error: \(error)")
+                }
+            } receiveValue: { [unowned self] results in
                 self.results.send(results)
             }
             .store(in: &subscriptions)

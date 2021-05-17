@@ -9,7 +9,7 @@ import UIKit
 import Combine
 
 class PaymentsTableViewController: UITableViewController {
-    var paymentsViewModel = PaymentsViewModel()
+    private let paymentsViewModel = PaymentsViewModel()
     private var subscriptions = Set<AnyCancellable>()
     
     override func viewDidLoad() {
@@ -21,6 +21,7 @@ class PaymentsTableViewController: UITableViewController {
         
         // Reload table view upon receiving data
         paymentsViewModel.results
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [unowned self] _ in
                 self.tableView.reloadData()
